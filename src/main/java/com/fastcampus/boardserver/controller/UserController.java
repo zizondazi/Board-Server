@@ -38,27 +38,24 @@ public class UserController {
         userService.register(userDTO);
     }
 
-    @PostMapping("sign-in")
+    @PostMapping("sing-in")
     public HttpStatus login(@RequestBody UserLoginRequest loginRequest,
                             HttpSession session) {
         ResponseEntity<LoginResponse> responseEntity = null;
         String userId = loginRequest.getUserId();
         String password = loginRequest.getPassword();
         UserDTO userInfo = userService.login(userId, password);
-        String id = String.valueOf(userInfo.getId());
 
         if (userInfo == null) {
             return HttpStatus.NOT_FOUND;
         } else if (userInfo != null) {
             LoginResponse loginResponse = LoginResponse.success(userInfo);
             if (userInfo.getStatus() == (UserDTO.Status.ADMIN))
-                SessionUtil.setLoginAdminId(session, id);
+                SessionUtil.setLoginAdminId(session, userId);
             else
-                SessionUtil.setLoginMemberId(session, id);
+                SessionUtil.setLoginMemberId(session, userId);
 
             responseEntity = new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.OK);
-        } else {
-            throw new RuntimeException("Login Error! 유저 정보가 없거나 지워진 유저 정보입니다.");
         }
 
         return HttpStatus.OK;
@@ -82,13 +79,13 @@ public class UserController {
     public ResponseEntity<LoginResponse> updateUserPassword(String accountId, @RequestBody UserUpdatePasswordRequest userUpdatePasswordRequest,
                                                             HttpSession session) {
         ResponseEntity<LoginResponse> responseEntity = null;
-        String Id = accountId;
+        String id = accountId;
         String beforePassword = userUpdatePasswordRequest.getBeforePassword();
         String afterPassword = userUpdatePasswordRequest.getAfterPassword();
 
         try {
-            userService.updatePassword(Id, beforePassword, afterPassword);
-            UserDTO userInfo = userService.login(Id, afterPassword);
+            userService.updatePassword(id, beforePassword, afterPassword);
+            UserDTO userInfo = userService.login(id, afterPassword);
             LoginResponse loginResponse = LoginResponse.success(userInfo);
             ResponseEntity.ok(new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.OK));
         } catch (IllegalArgumentException e) {

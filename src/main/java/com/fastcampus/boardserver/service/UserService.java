@@ -1,9 +1,7 @@
 package com.fastcampus.boardserver.service;
 
 import com.fastcampus.boardserver.dto.UserDTO;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface UserService {
 
     void register(UserDTO userProfile);
