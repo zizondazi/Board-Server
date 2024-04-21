@@ -1,14 +1,53 @@
 package com.fastcampus.boardserver.controller;
 
 
+import com.fastcampus.boardserver.aop.LoginCheck;
+import com.fastcampus.boardserver.dto.CategoryDTO;
+import com.fastcampus.boardserver.service.impl.CategoryServiceImpl;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/categories")
 @Log4j2
 public class CategoryController {
 
-    //private CategoryServiceImpl
+    private CategoryServiceImpl categoryService;
+
+    public CategoryController(CategoryServiceImpl categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @LoginCheck(type = LoginCheck.UserType.ADMIN)
+    public void regstierCategories(String accountId, @RequestBody CategoryDTO category) {
+        categoryService.register(accountId, category);
+    }
+
+    @PatchMapping("{categoryId}")
+    @LoginCheck(type = LoginCheck.UserType.ADMIN)
+    public void updateCategories(String accountId,
+                               @PathVariable(name="categoryId") int categoryId,
+                               @RequestBody CategoryRequst category) {
+        CategoryDTO categoryDTO = new CategoryDTO(categoryId, category.name, CategoryDTO.SortStatus.NEWEST, 10, 0);
+        categoryService.update(categoryDTO);
+    }
+
+    @DeleteMapping("{categoryId}")
+    @LoginCheck(type = LoginCheck.UserType.ADMIN)
+    public void deleteCategories(String accountId,
+                                 @PathVariable(name="categoryId") int categoryId){
+        categoryService.delete(categoryId);
+    }
+
+    @Getter
+    @Setter
+    private static class CategoryRequst {
+        private int id;
+        private String name;
+    }
 }
