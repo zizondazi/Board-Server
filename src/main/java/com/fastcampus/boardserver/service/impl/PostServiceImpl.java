@@ -54,6 +54,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePosts(int userId, int postId) {
-
+        if(userId != 0 && postId != 0){
+            postMapper.deletePosts(userId, postId);
+        }else {
+            log.error("deletePosts ERROR {}", postId );
+            throw new RuntimeException("deletePosts ERROR");
+        }
     }
 }

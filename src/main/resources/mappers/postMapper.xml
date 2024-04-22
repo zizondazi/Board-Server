@@ -39,7 +39,8 @@
 
     <delete id="deletePosts" >
         DELETE FROM post
-        WHERE id = #{productId}
+        WHERE id = #{postId}
+        AND userId = #{userId}
     </delete>
 
 </mapper>
