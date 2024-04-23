@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fastcampus.boardserver.mapper.TagMapper">
+
+    <insert id="registerComment" parameterType="com.fastcampus.boardserver.dto.TagDTO">
+        INSERT INTO tag (id, name)
+        VALUES (#{id}, #{name})
+        <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateComment" parameterType="com.fastcampus.boardserver.dto.TagDTO">
+        UPDATE tag
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteComment">
+        DELETE FROM tag
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="createPostTag" parameterType="com.fastcampus.boardserver.dto.TagDTO">
+        INSERT INTO posttag(tagId, postId)
+        VALUES (#{tagId}, #{postId})
+    </insert>
+</mapper>

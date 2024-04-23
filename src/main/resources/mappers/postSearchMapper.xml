@@ -37,4 +37,21 @@
         </if>
     </select>
 
+    <select id="selectPostsByTagName" resultType="com.fastcampus.boardserver.dto.PostDTO">
+        SELECT
+            p.`id`,
+            p.`name`,
+            p.`isAdmin`,
+            p.`contents`,
+            p.`createTime`,
+            p.`views`,
+            p.`categoryId`,
+            p.`userId`,
+            p.`fileId`,
+            p.`updateTime`
+        FROM `post` p
+         JOIN posttag pt on p.id = pt.postId
+         JOIN tag t on pt.tagId = t.id
+        WHERE t.name = #{name}
+    </select>
 </mapper>
