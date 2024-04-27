@@ -17,7 +17,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void register(String accountId, CategoryDTO categoryDTO) {
         if(accountId != null) {
-            categoryMapper.register(categoryDTO);
+            try {
+                categoryMapper.register(categoryDTO);
+            }catch (RuntimeException e) {
+                log.error("update error {} ");
+                throw new RuntimeException("update error 카테고리등록 수정 메서드를 확인해 주세요. " + categoryDTO);
+            }
         }else {
             log.error("register error {} ", categoryDTO);
             throw new RuntimeException("register error 카테고리등록 등록 메서드를 확인해 주세요. " + categoryDTO);
@@ -27,7 +32,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void update(CategoryDTO categoryDTO) {
         if(categoryDTO != null) {
-            categoryMapper.updateCategory(categoryDTO);
+            try {
+                categoryMapper.updateCategory(categoryDTO);
+            }catch (RuntimeException e) {
+                log.error("update error {} ");
+                throw new RuntimeException("update error 카테고리등록 수정 메서드를 확인해 주세요. " + categoryDTO);
+            }
         }else {
             log.error("update error {} ");
             throw new RuntimeException("update error 카테고리등록 수정 메서드를 확인해 주세요. " + categoryDTO);
